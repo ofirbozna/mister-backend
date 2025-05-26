@@ -89,12 +89,13 @@ async function add(toy) {
 
 async function update(toy) {
     try {
-        const { name, price, inStock, labels } = toy
+        const { name, price, inStock, labels, imgUrl } = toy
         const toyToSave = {
             name,
             price: +price,
             labels,
-            inStock
+            inStock,
+            imgUrl
         }
         const collection = await dbService.getCollection('toy')
         await collection.updateOne({ _id: ObjectId.createFromHexString(toy._id) }, { $set: toyToSave })
@@ -120,7 +121,7 @@ async function addToyMsg(toyId, msg) {
 async function removeToyMsg(toyId, msgId) {
     try {
         const collection = await dbService.getCollection('toy')
-        await collection.updateOne({ _id: ObjectId.createFromHexString(toyId) }, { $pull: { msgs: { id: msgId }}})
+        await collection.updateOne({ _id: ObjectId.createFromHexString(toyId) }, { $pull: { msgs: { id: msgId } } })
         return msgId
     } catch (err) {
         logger.error(`cannot remove msg ${toyId}`, err)
